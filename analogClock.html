@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>24 Hour Analog Clock</title>
+    <meta name="robots" content="noindex, noml, nofollow">
+    <meta name="description" content="24 Hour Analog Clock and 24 Hour Digital Clock">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Teko:wght@300..700&display=swap');
+
+        *,html,body,div,span,a,h1,h2,h3,h4,h5,h6,p,blockquote,img,ol,ul,
+        li,input,label,select,table,tbody,tfoot,thead,tr,th,td,footer,
+        header,menu,nav,section,video {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+
+            background-color: rgb(255, 255, 255);
+        }
+
+        .clock-rim {
+            aspect-ratio: 1/1;
+            width: 530px;
+            position: relative;
+            background-color: black;
+            border-radius: 50%;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .clock {
+            aspect-ratio: 1/1;
+            width: 500px;
+            height: 500px;
+            position: relative;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .number {
+            /* rotate the number based on its position on the clock face:
+                - the rotation is calculated 15 degrees multiplied by the 
+                value of the CSS variable --n.
+                - meaning, each number is positioned at intervals of 15 degrees
+                  (360 degrees / 24 (hr) numbers) */
+            transform: rotate(calc(15deg * var(--n)));
+
+            /* Position the numbers absolutely within the clock container */
+            position: absolute;
+
+            /* Set the inset for all sides (TRBL) to 20px,
+            to create some space from the edges of the clock*/
+            inset: 20px;
+
+            text-align: center;
+            font-size: 40px;
+        }
+
+        .number b {
+            transform: rotate(calc(-15deg * var(--n)));
+            display: inline-block;
+        }
+
+        .number:nth-child(odd) {
+            font-size: 20px;
+        }
+
+        .dotSeconds {
+            transform: rotate(calc(6deg * var(--n)));
+            position: absolute;
+            text-align: center;
+            inset: -3px;
+            font-size: 15px;
+        }
+
+        .dotSeconds:nth-child(5n) {
+            font-weight: 800;
+            font-size: 20px;
+            inset: -4px;
+        }
+
+        .center-dot {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background-color: lightgray;
+            border-radius: 50%;
+        }
+
+        .hour-hand,
+        .minute-hand,
+        .second-hand {
+            /* CSS variable to hold the rotation value */
+            --rotate: 0;
+
+            /* Positions the hands absolutely withing the clock container */
+            position: absolute;
+            
+            /* Center the hands horizontally aka horizontally placing the
+                clock hands with the bottom of the hands as the reference
+                point of movement*/
+            left: 50%;
+
+            /* Position bottom of the hands at the center of the clock
+               aka vertically placing the clock hands with the bottom 
+               of the hands as the reference point of movement */
+            bottom: 50%;
+
+            /* Transform the hands:
+                1. translate(-50%)
+                    - move the hands left by 50% of their own width to center them 
+                2. rotate(calc(var(--rotate) * 1deg))
+                    - rotate the hands based on the --rotate variable
+                    - the rotation is calculated in degrees (1deg) to ensure 
+                      proper rotation*/
+            transform: translate(-50%) rotate(calc(var(--rotate) * 1deg));
+
+            /* sets the point of rotation of the hands, which in this case
+                is the hand's bottom */
+            transform-origin: bottom;
+            
+            border-top-left-radius: 100%;
+            border-top-right-radius: 100%;
+        }
+
+        .hour-hand {
+            width: 12px;
+            height: 130px;
+            background-color: black;
+        }
+
+        .minute-hand {
+            width: 12px;
+            height: 190px;
+            background-color: black;
+        }
+
+        .second-hand {
+            width: 6px;
+            height: 210px;
+            background-color: black;
+        }
+
+        #digitalTime {
+            background-color: white;
+            /* color: white; */
+            border: 6px solid black;
+            border-radius: 40px;
+            padding: 0px 40px;
+            margin-top: -15px;
+            margin-bottom: 30px;
+            font-size: 30px;
+            letter-spacing: 5px;
+            font-weight: bold;
+        }
+
+        h1 {
+            margin: 30px;
+        }
+
+
+
+        @media screen and (max-width: 700px) {
+            .clock-rim {
+                width: calc(400px + 30px);
+            }
+
+            .clock {
+                width: 400px;
+                height: 400px;
+            }
+
+            .hour-hand {
+                width: 10px;
+                height: 100px;
+            }
+
+            .minute-hand {
+                width: 10px;
+                height: 140px;
+            }
+
+            .second-hand {
+                width: 10px;
+                height: 160px;
+            }
+        }
+
+        @media screen and (max-width: 600px) {
+            .clock-rim {
+                width: calc(350px + 30px);
+            }
+
+            .clock {
+                width: 350px;
+                height: 350px;
+            }
+
+            .hour-hand {
+                width: 10px;
+                height: 85px;
+            }
+
+            .minute-hand {
+                width: 10px;
+                height: 110px;
+            }
+
+            .second-hand {
+                width: 10px;
+                height: 130px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>24 Hour Analog Clock</h1>
+
+    <div class="clock-rim">
+        <div class="clock">
+            <!-- Clock Number -->
+            <div class="number" style="--n:1"><b>01</b></div>
+            <div class="number" style="--n:2"><b>02</b></div>
+            <div class="number" style="--n:3"><b>03</b></div>
+            <div class="number" style="--n:4"><b>04</b></div>
+            <div class="number" style="--n:5"><b>05</b></div>
+            <div class="number" style="--n:6"><b>06</b></div>
+            <div class="number" style="--n:7"><b>07</b></div>
+            <div class="number" style="--n:8"><b>08</b></div>
+            <div class="number" style="--n:9"><b>09</b></div>
+            <div class="number" style="--n:10"><b>10</b></div>
+            <div class="number" style="--n:11"><b>11</b></div>
+            <div class="number" style="--n:12"><b>12</b></div>
+            <div class="number" style="--n:13"><b>13</b></div>
+            <div class="number" style="--n:14"><b>14</b></div>
+            <div class="number" style="--n:15"><b>15</b></div>
+            <div class="number" style="--n:16"><b>16</b></div>
+            <div class="number" style="--n:17"><b>17</b></div>
+            <div class="number" style="--n:18"><b>18</b></div>
+            <div class="number" style="--n:19"><b>19</b></div>
+            <div class="number" style="--n:20"><b>20</b></div>
+            <div class="number" style="--n:21"><b>21</b></div>
+            <div class="number" style="--n:22"><b>22</b></div>
+            <div class="number" style="--n:23"><b>23</b></div>
+            <div class="number" style="--n:24"><b>00</b></div>
+
+
+            <!-- Clock Components (Dot, Hour, Minute, Second) -->
+            <div class="hour-hand" id="hour-hand"></div>
+            <div class="minute-hand" id="minute-hand"></div>
+            <div class="second-hand" id="second-hand"></div>
+            <div class="center-dot"></div>
+
+
+            <!-- Seconds' Dot -->
+            <script>
+                //Getting the first element that matches the CSS selector
+                //which in this case is '.clock'
+                const clock = document.querySelector('.clock');
+                for (let i = 0; i < 60; i++) {
+                    //creating a div and storing it inside the dot variable
+                    const dot = document.createElement('div');
+
+                    //naming the div stored within the dot variable 'dotSeconds'
+                    dot.className = 'dotSeconds';
+
+                    //setting the style of the div within the dot variable
+                    //setting its style property as --n:i
+                    //value within the variable i will change after every loop
+                    dot.style.setProperty('--n', i);
+
+                    //setting the text content of the div within the dot variable
+                    //in this case, the content is '|'
+                    dot.textContent = '|';
+
+                    //inserting the div within the dot variable after the last child
+                    //of the parent node, which in this case the parent node is the clock
+                    clock.appendChild(dot);
+                }
+            </script>
+        </div>
+    </div>
+
+    <!-- Title -->
+    <h1>24 Hour Digital Clock</h1>
+    <!-- 24 Hour Digital Clock -->
+    <div id="digitalTime"></div>
+
+
+    <!-- Analog Clock Movement and Digital Clock Time Formatting | Logic -->
+    <script>
+        //Getting the relevant clock hands by their id and assigning it to the relevant variables
+        const secondHand = document.getElementById('second-hand');
+        const minuteHand = document.getElementById('minute-hand');
+        const hourHand = document.getElementById('hour-hand');
+
+        //Function: Updates the position of the clock hands and the digital clock display 
+        function clockTick() {
+            //Get the current date and time
+            const date = new Date();
+
+            //Get the seconds of current date then dividing by 60 to get the fraction
+            //of the current minute
+            const seconds = date.getSeconds() / 60;
+
+            //Get the minutes of current date then dividing by 60, then adding the fraction
+            // of the current seconds to get the fraction of the current minute
+            const minutes = (date.getMinutes() + seconds) / 60;
+
+            //Get the hours of current date then dividing by 24 (bc 24 hour clock), 
+            // then adding the fraction of the current minutes to get the fraction 
+            // of the current hour
+            const hours = (date.getHours() + minutes) / 24;
+
+            //Calling the function to rotate the clock hands based on the calculated fractions
+            rotateClockHand(secondHand, seconds);
+            rotateClockHand(minuteHand, minutes);
+            rotateClockHand(hourHand, hours);
+
+            //Calling the function to update the digital clock time display
+            digitalTime(date.getHours(), date.getMinutes(), date.getSeconds())
+        }
+
+        //Function: Rotates the specified clock hand element based on the given rotation value
+        function rotateClockHand(element, rotation) {
+            //Set the CSS variable for rotation
+            element.style.setProperty('--rotate', rotation * 360);
+        }
+
+        //Inital call to update the clock hands and digital time immediately
+        clockTick();
+        //Interval to update the clock every second (1000 miliseconds)
+        setInterval(clockTick, 1000);
+
+        //Function: Updates the digital clock display with the formatted time
+        function digitalTime(hours, minutes, seconds) {
+            //Formatting hours, minutes, and seconds to always be in two digits
+            const formattedHours = String(hours).padStart(2, '0');
+            const formattedMinutes = String(minutes).padStart(2, '0');
+            const formattedSeconds = String(seconds).padStart(2, '0');
+
+            //Creates time string in HH:MM:SS format
+            const timeString = `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+            //Update inner HTML of digitalTime element with the formatted time string
+            document.getElementById("digitalTime").innerHTML = timeString;
+        }
+
+        //Initial call to display the current time immediately
+        digitalTime(new Date().getHours(), new Date().getMinutes(), new Date().getSeconds());
+    </script>
+
+    <!-- Notes:
+        const formattedHours = String(hours).padStart(2, '0');
+        const formattedMinutes = String(minutes).padStart(2, '0');
+        const formattedSeconds = String(seconds).padStart(2, '0');
+
+        1. String Conversion:
+        - String(hours), String(minutes), String(seconds) converts the numerical values of
+          hours, minutes, seconds into strings
+        - this is done because the padStart() method is a string method, it requires only 
+          string types as an argument
+
+        2. padStart() Method:
+        - built-in JS string method that pads the current string with another string, until
+          the resulting string reaches the specified length
+        - in this case, the number used for padding is '0', and the specified length is 2
+
+        - syntax: str.padStart(targetLength, padString)
+        - 'targetLength': the length of the resulting string once the padding is applied.
+                          if the current string is longer than the target length, no 
+                          padding is applied
+        - 'padString': the string used for padding. if the pad string is too long, it 
+                       will be truncated to fit
+        
+        - in this case, padStart(2,0) ensures single digit numbers like '5' are padded 
+          with a '0', and if it's a two digit number like '12', nothing will be done (as
+          in it won't be padded)
+        - padding the string at the start of the string. basically the pad content is being
+          placed behind whatever is being padded.
+
+
+        const timeString = `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+
+        1. Template Literals:
+        - the backticks ` shows that it's a template literal
+        - TL allows for multi-line strings and embedding expressions inside the string
+        (string interpolation)
+
+        2. String Interpolation:
+        - `${expression}` syntax is used for string interpolation
+        - SI allows you to insert values of variables directly into the string.
+
+        3. Concatenation
+        - the colons : are used as separators between the variables
+        - common format for representing time
+    -->
+</body>
+
+</html>
