@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>24 Hour Analog Clock</title>
+    <link rel="icon" type="image/x-icon" href="./media/icon - s.png">
     <meta name="robots" content="noindex, noml, nofollow">
     <meta name="description" content="24 Hour Analog Clock and 24 Hour Digital Clock">
 
@@ -176,7 +177,12 @@
             margin: 30px;
         }
 
-
+        p{
+            margin-bottom: 200px;
+            font-weight: bold;
+            letter-spacing: 10px;
+            opacity: 50%;
+        }
 
         @media screen and (max-width: 700px) {
             .clock-rim {
@@ -199,7 +205,7 @@
             }
 
             .second-hand {
-                width: 8px;
+                width: 5px;
                 height: 180px;
             }
 
@@ -208,6 +214,11 @@
             }
             .number:nth-child(even){
                 font-size: 35px;
+            }
+
+            p{
+                margin-bottom: 150px;
+                font-size: 13px;
             }
         }
 
@@ -232,7 +243,7 @@
             }
 
             .second-hand {
-                width: 6px;
+                width: 3px;
                 height: 160px;
             }
 
@@ -241,6 +252,11 @@
             }
             .number:nth-child(even){
                 font-size: 30px;
+            }
+
+            p{
+                margin-bottom: 125px;
+                font-size: 10px;
             }
         }
     </style>
@@ -284,7 +300,6 @@
             <div class="second-hand" id="second-hand"></div>
             <div class="center-dot"></div>
 
-
             <!-- Seconds' Dot -->
             <script>
                 //Getting the first element that matches the CSS selector
@@ -311,8 +326,13 @@
                     clock.appendChild(dot);
                 }
             </script>
+
+            <!-- Clock Name -->
+            <p>NAJYA</p>
         </div>
     </div>
+
+    <div class="space" style="height: 50px;"></div>
 
     <!-- Title -->
     <h1>24 Hour Digital Clock</h1>
